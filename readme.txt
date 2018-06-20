@@ -1,1 +1,1 @@
-Hello world
+该库实现了分别用TCP和UDP协议实现的在Linux平台下的socket通信的demo
