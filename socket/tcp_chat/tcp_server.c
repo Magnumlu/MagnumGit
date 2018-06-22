@@ -1,5 +1,4 @@
-/************************************************
-  Project:Socket communication demo server codes
+/*roject:Socket communication demo server codes
   Author :Lumengru
   **********************************************/
 #include <signal.h>
@@ -34,12 +33,16 @@ int main(int argc,char* argv[])
 	ser.sin_addr.s_addr=inet_addr(argv[1]);//ip，将点分十进制ip转换为网络字节序的32位二进制数值
 	int ret;
 	ret=bind(sfd,(struct sockaddr*)&ser,sizeof(ser));//将socket描述符与服务器的ip、port绑定
+
 	if(-1==ret)
 	{
 		perror("bind");
 		return -1;
 	}
+	printf("I am here\n");
+	while(1){}
 	listen(sfd,10);
+	printf("I am here 2\n");
 	//使服务器的这个端口和ip处于监听状态，等待客户机的连接请求;10:同时能处理的最大连接请求数
 	int new_fd=-1;
 	struct sockaddr_in cli;

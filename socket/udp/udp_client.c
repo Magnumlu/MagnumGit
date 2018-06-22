@@ -31,7 +31,7 @@ int main(int argc,char* argv[])
 	memset(&ser,0,sizeof(ser));//清空地址结构
 	ser.sin_family=AF_INET;//采用ipv4协议
 	ser.sin_port=htons(atoi(argv[2]));//端口号，将主机字节序的port转换为网络字节序的port
-	ser.sin_addr.s_addr=inet_addr(argv[1]);//udp进行bind后，端口就打开；将生成的sfd与服务器的socket信息数据绑定
+	ser.sin_addr.s_addr=inet_addr(argv[1]);//ip，将点分十进制的主机字节序的ip转换为32位二进制数值的网络字节序的ip
 	int ret;
 	int len=sizeof(ser);
 	ret=sendto(sfd,"I am udpclient",14,0,(struct sockaddr*)&ser,len);
@@ -40,16 +40,22 @@ int main(int argc,char* argv[])
 		perror("sendto");
 		return -1;
 	}
+	printf("Client:已成功连接到服务器,请向服务器发送信息:\n");
 	char buf[128]={0};
-	struct sockaddr_in cli;
-	memset(&cli,0,sizeof(cli));
-	ret=recvfrom(sfd,buf,sizeof(buf),0,(struct sockaddr*)&cli,&len);
-	if(-1==ret)
+	//struct sockaddr_in cli;
+	//memset(&cli,0,sizeof(cli));
+	while(1)
 	{
-		perror("recvfrom");
-		return -1;
+		memset(&buf,0,sizeof(buf));
+		read(0,buf,sizeof(buf));
+		ret=sendto(sfd,buf,strlen(buf)-1,0,(struct sockaddr*)&ser,len);
+		//ret=recvfrom(sfd,buf,sizeof(buf),0,(struct sockaddr*)&cli,&len);
+		if(-1==ret)
+		{
+			perror("sendto");
+			return -1;
+		}
 	}
-	//printf("client recvfrom %s\n",buf);
 	close(sfd);
 	return 0;
 }

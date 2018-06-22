@@ -40,20 +40,19 @@ int main(int argc,char* argv[])
 	}
 	char buf[128]={0};
 	struct sockaddr_in cli;//定义客户端的socket地址结构，用于接收客户端的ip和port信息
-	memset(&cli,0,sizeof(cli));
-	int len=sizeof(cli);
-	ret=recvfrom(sfd,buf,sizeof(buf),0,(struct sockaddr*)&cli,&len);
-	if(-1==ret)
+	int len;
+	while(1)
 	{
-		perror("recvfrom");
-		return -1;
-	}
-	printf("recvfrom %s\n",buf);
-	ret=sendto(sfd,"I am udpserver",14,0,(struct sockaddr*)&cli,len);
-	if(-1==ret)
-	{
-		perror("sendto");
-		return -1;
+		memset(&buf,0,sizeof(buf));
+		memset(&cli,0,sizeof(cli));
+		len=sizeof(cli);
+		ret=recvfrom(sfd,buf,sizeof(buf),0,(struct sockaddr*)&cli,&len);
+		if(-1==ret)
+		{
+			perror("recvfrom");
+			return -1;
+		}
+		printf("UDP Server:客户端发来的信息是%s\n",buf);
 	}
 	close(sfd);
 	return 0;
